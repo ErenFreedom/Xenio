@@ -1,0 +1,97 @@
+/* Main structure */
+.otp-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #0d0d0d; /* Dark sleek background */
+    color: #fff;
+}
+
+.otp-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.otp-container {
+    text-align: center;
+    padding: 30px;
+}
+
+/* OTP Heading */
+.otp-heading {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f5f5f7;
+    margin-bottom: 10px;
+}
+
+.otp-email {
+    font-size: 1.25rem;
+    color: #a1a1a6;
+    margin-bottom: 20px;
+}
+
+/* OTP Input Boxes */
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.otp-box {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: 2px solid #ffffff; /* White border for input boxes */
+    border-radius: 5px;
+    background-color: transparent;
+    color: #ffffff;
+    outline: none;
+}
+
+.otp-box:focus {
+    border-color: #eab308; /* Golden border on focus */
+}
+
+/* Timer */
+.otp-timer {
+    font-size: 1.25rem;
+    color: #eab308; /* Golden color for the timer */
+}
+
+/* Resend OTP Button */
+.button-81 {
+    background-color: #fff;
+    border: 0 solid #e2e8f0;
+    border-radius: 1.5rem;
+    box-sizing: border-box;
+    color: #0d172a;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Basier circle",-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 1rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all .1s cubic-bezier(.4, 0, .2, 1);
+    box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
+    user-select: none;
+    margin-top: 20px;
+}
+
+.button-81:hover {
+    background-color: #1e293b;
+    color: #fff;
+}
+
+.button-81:disabled {
+    background-color: #aaa;
+    color: #fff;
+    cursor: not-allowed;
+}

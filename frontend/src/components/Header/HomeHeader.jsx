@@ -1,7 +1,10 @@
 import React from 'react';
+import { useLocation, Link } from 'react-router-dom'; // Added Link for navigation and useLocation for conditionally rendering
 import './HomeHeader.css';
 
 function HomeHeader() {
+    const location = useLocation(); // Get the current location
+
     return (
         <header className="home-header">
             <div className="header-left">
@@ -16,7 +19,15 @@ function HomeHeader() {
                 </nav>
             </div>
             <div className="header-right">
-                <button className="button-81">Login</button> {/* Removed redundant role */}
+                {location.pathname === '/login' || location.pathname === '/otp' ? (
+                    <Link to="/">
+                        <button className="button-81">Home</button>
+                    </Link>
+                ) : (
+                    <Link to="/login">
+                        <button className="button-81">Login</button>
+                    </Link>
+                )}
             </div>
         </header>
     );
