@@ -1,0 +1,182 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #0d0d0d; /* Dark sleek background */
+    color: #f5f5f7;
+}
+
+.home-body {
+    text-align: center;
+    flex-grow: 1;
+    padding: 50px 20px;
+    margin-top: 20px;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    margin: 0 auto 30px; /* Center the search bar with space below it */
+}
+
+.search-bar {
+    background-color: #fff;
+    border: 0 solid #e2e8f0;
+    border-radius: 1.5rem;
+    box-sizing: border-box;
+    color: #0d172a;
+    display: inline-block;
+    font-family: "Basier circle",-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1rem 2rem 1rem 3.5rem;
+    text-align: left;
+    width: 100%;
+    box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
+}
+
+.search-bar::placeholder {
+    color: #a1a1a6;
+}
+
+.search-bar:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px #0071e3;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #0d172a;
+    font-size: 20px;
+}
+
+.home-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 50px 20px;
+}
+
+.left-text {
+    flex: 1;
+    text-align: left;
+    padding-left: 50px;
+}
+
+.left-text h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f5f5f7;
+    margin: 0;
+}
+
+.left-text h1 .highlight {
+    color: #eab308; /* Golden color for 'Xenio' */
+}
+
+.left-text p {
+    font-size: 1.25rem;
+    margin: 10px 0;
+    color: #a1a1a6;
+}
+
+/* Get Early Access section */
+.early-access {
+    margin-top: 120px; /* Adjusted margin to add more space above */
+}
+
+.early-access h2 {
+    font-size: 2.75rem;
+    margin-bottom: 10px;
+    color: #f5f5f7;
+}
+
+.button-81 {
+    background-color: #fff;
+    border: 0 solid #e2e8f0;
+    border-radius: 1.5rem;
+    box-sizing: border-box;
+    color: #0d172a;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Basier circle",-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 1rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all .1s cubic-bezier(.4, 0, .2, 1);
+    box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
+    user-select: none;
+    margin-top: 20px;
+}
+
+.button-81:hover {
+    background-color: #1e293b;
+    color: #fff;
+}
+
+.right-content {
+    flex: 1;
+    text-align: right;
+    padding-right: 50px;
+}
+
+.image-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.right-image {
+    width: 100%; /* Make sure the image takes up 100% of the container width */
+    max-width: 550px; /* Limit the maximum size of the image */
+    height: 300px; /* Set a fixed height */
+    object-fit: contain; /* Ensure the image fits within the dimensions while maintaining aspect ratio */
+    background-color: transparent;
+    border: none; /* Remove any borders */
+    box-shadow: none; /* Remove any box shadow */
+}
+
+.slide-text {
+    font-size: 1.25rem;
+    margin-top: 10px;
+    color: #f5f5f7;
+    font-family: "Basier circle",-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    font-weight: bold;
+    text-align: center; /* Center text below image */
+}
+
+@media (min-width: 768px) {
+    .search-bar {
+        font-size: 1.25rem;
+        padding: 1rem 2.5rem 1rem 3.5rem;
+    }
+
+    .search-container {
+        width: 40%;
+    }
+
+    .home-content {
+        flex-direction: row;
+    }
+
+    .left-text {
+        padding-left: 100px;
+    }
+
+    .right-content {
+        padding-right: 100px;
+    }
+
+    .image-right {
+        padding-right: 100px;
+        padding-top: 100px; /* Increased top padding for larger screens */
+    }
+}
