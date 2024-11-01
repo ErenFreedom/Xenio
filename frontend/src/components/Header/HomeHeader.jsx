@@ -1,3 +1,4 @@
+// src/components/Header/HomeHeader.jsx
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import './HomeHeader.css';
@@ -19,7 +20,7 @@ function HomeHeader() {
                 </nav>
             </div>
             <div className="header-right">
-                {location.pathname === '/login' || location.pathname === '/otp' || location.pathname === '/signup' ? (
+                {location.pathname === '/login' || location.pathname === '/otp' || location.pathname === '/signup' || location.pathname === '/login-otp' ? (
                     <Link to="/">
                         <button className="button-81">Home</button>
                     </Link>

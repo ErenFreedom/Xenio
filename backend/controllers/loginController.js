@@ -68,39 +68,57 @@ function verifyLoginOtp(req, res) {
     const { email, otp } = req.body;
 
     db.get(
-        `SELECT * FROM otps WHERE email = ? AND otp = ?`,
-        [email, otp],
-        (err, otpRecord) => {
-            if (err) {
-                console.error('Error querying OTPs table:', err.message);
+        `SELECT * FROM users WHERE email = ?`,
+        [email],
+        (err, user) => {
+            if (err || !user) {
+                console.error('Error querying users table:', err.message);
                 return res.status(500).json({ message: 'Database error' });
             }
 
-            if (!otpRecord) {
-                return res.status(400).json({ message: 'Invalid OTP' });
-            }
+            db.get(
+                `SELECT * FROM otps WHERE email = ? AND otp = ?`,
+                [email, otp],
+                (err, otpRecord) => {
+                    if (err) {
+                        console.error('Error querying OTPs table:', err.message);
+                        return res.status(500).json({ message: 'Database error' });
+                    }
 
-            // Retrieve OTP creation time and compare with current time for expiration
-            const otpCreatedAtUTC = new Date(otpRecord.created_at + " UTC");
-            const currentTimeUTC = new Date(new Date().toISOString());
+                    if (!otpRecord) {
+                        return res.status(400).json({ message: 'Invalid OTP' });
+                    }
 
-            const timeDiff = (currentTimeUTC - otpCreatedAtUTC) / 1000;
+                    // Retrieve OTP creation time and compare with current time for expiration
+                    const otpCreatedAtUTC = new Date(otpRecord.created_at + " UTC");
+                    const currentTimeUTC = new Date(new Date().toISOString());
 
-            if (timeDiff > 120) { // 120 seconds (2-minute validity)
-                return res.status(400).json({ message: 'OTP expired' });
-            }
+                    const timeDiff = (currentTimeUTC - otpCreatedAtUTC) / 1000;
 
-            // Generate JWT token valid for 2 hours
-            const token = jwt.sign({ userId: otpRecord.id }, jwtSecretKey, { expiresIn: '2h' });
+                    if (timeDiff > 120) { // 120 seconds (2-minute validity)
+                        return res.status(400).json({ message: 'OTP expired' });
+                    }
 
-            // Clear OTP after successful login
-            db.run(`DELETE FROM otps WHERE email = ?`, [email], (deleteErr) => {
-                if (deleteErr) {
-                    console.error('Error deleting OTP:', deleteErr.message);
-                    return res.status(500).json({ message: 'Error clearing OTP' });
+                    // Generate JWT token with username, email, and encrypted password
+                    const tokenPayload = {
+                        userId: user.id,
+                        username: user.username,
+                        email: user.email,
+                        password: user.password // Or consider encrypting this if absolutely necessary
+                    };
+
+                    const token = jwt.sign(tokenPayload, jwtSecretKey, { expiresIn: '2h' });
+
+                    // Clear OTP after successful login
+                    db.run(`DELETE FROM otps WHERE email = ?`, [email], (deleteErr) => {
+                        if (deleteErr) {
+                            console.error('Error deleting OTP:', deleteErr.message);
+                            return res.status(500).json({ message: 'Error clearing OTP' });
+                        }
+                        res.status(200).json({ message: 'Login successful', token });
+                    });
                 }
-                res.status(200).json({ message: 'Login successful', token });
-            });
+            );
         }
     );
 }
