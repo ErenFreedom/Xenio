@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import './Otp.css';
 import HomeHeader from '../../components/Header/HomeHeader';
 import HomeFooter from '../../components/Footer/HomeFooter';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Otp() {
+    const navigate = useNavigate();
     const [otp, setOtp] = useState(new Array(6).fill(""));
-    const [timer, setTimer] = useState(60);
+    const [timer, setTimer] = useState(120);
 
-    // Countdown timer logic
     useEffect(() => {
         if (timer > 0) {
             const countdown = setInterval(() => {
@@ -17,23 +20,48 @@ function Otp() {
         }
     }, [timer]);
 
-    // Handle OTP input
     const handleOtpChange = (element, index) => {
         if (isNaN(element.value)) return;
         const newOtp = [...otp];
         newOtp[index] = element.value;
         setOtp(newOtp);
 
-        // Move focus to the next input box automatically
         if (element.nextSibling && element.value) {
             element.nextSibling.focus();
         }
     };
 
+    const verifyOtp = async () => {
+        const otpCode = otp.join('');
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: 'freedomyeager12@gmail.com', otp: otpCode }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                toast.success("Registration successful! You can now login.");
+                
+                // Delay navigation to give time for the toast to show
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000);
+            } else {
+                toast.error(result.message || 'OTP verification failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Error during OTP verification. Please try again.');
+        }
+    };
+
     const resendOtp = () => {
-        setTimer(60); // Reset the timer to 60 seconds
-        // Add your resend OTP logic here
+        setTimer(120); // Reset the timer to 2 minutes
         console.log("OTP has been resent");
+        // Add resend OTP logic here
     };
 
     return (
@@ -42,7 +70,7 @@ function Otp() {
             <div className="otp-body">
                 <div className="otp-container">
                     <h1 className="otp-heading">A 6-digit OTP has been sent to your registered email</h1>
-                    <p className="otp-email">*****.gmail.com</p>
+                    <p className="otp-email">*****@gmail.com</p>
                     <div className="otp-inputs">
                         {otp.map((data, index) => (
                             <input
@@ -57,12 +85,16 @@ function Otp() {
                     </div>
                     <p className="otp-timer">OTP expires in: {timer}s</p>
 
-                    {/* Resend OTP Button */}
+                    <button className="button-81" onClick={verifyOtp} disabled={timer <= 0}>
+                        Verify OTP
+                    </button>
+
                     <button className="button-81" onClick={resendOtp} disabled={timer > 0}>
                         Resend OTP
                     </button>
                 </div>
             </div>
+            <ToastContainer />
             <HomeFooter />
         </div>
     );

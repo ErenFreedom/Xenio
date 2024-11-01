@@ -1,0 +1,101 @@
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #0d0d0d;
+    color: #f5f5f7;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 30px;
+    margin: 0 auto;
+    width: 80%;
+    flex-grow: 1;
+}
+
+.dashboard-card {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.dashboard-card h3 {
+    margin: 0 0 20px;
+    font-size: 1.8rem; /* Increased font size for headings */
+    color: #ffd700; /* Vibrant gold color */
+}
+
+.dashboard-card p {
+    font-size: 2.5rem; /* Increased font size for main text */
+    color: #ffffff; /* Pure white for main text */
+    font-weight: bold; /* Increased font weight for numbers */
+}
+
+/* Styling for Latest Transaction */
+.latest-transaction {
+    font-size: 1.5rem; /* Font size for transaction text */
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+/* Search bar styling */
+.search-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 20px auto 40px;
+    width: 50%;
+}
+
+.search-bar {
+    background-color: #fff;
+    border: 0 solid #e2e8f0;
+    border-radius: 1.5rem;
+    box-sizing: border-box;
+    color: #0d172a;
+    display: inline-block;
+    font-family: "Basier circle", -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 1rem 2rem 1rem 3.5rem;
+    text-align: left;
+    width: 100%;
+    box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
+}
+
+.search-bar::placeholder {
+    color: #a1a1a6;
+}
+
+.search-bar:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px #0071e3;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #0d172a;
+    font-size: 20px;
+}
+
+/* Footer styling */
+.footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #0d0d0d;
+    color: #f5f5f7;
+}
