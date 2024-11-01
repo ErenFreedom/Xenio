@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css';
-import { FaSearch } from 'react-icons/fa'; // Importing the search icon
+import { FaSearch } from 'react-icons/fa';
 import HomeHeader from '../../components/Header/HomeHeader';
 import HomeFooter from '../../components/Footer/HomeFooter';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function Home() {
+    const navigate = useNavigate(); // Initialize useNavigate
+
     // Slideshow data: array of images and text
     const slides = [
         { image: '/image2.png', text: 'Innovative Banking Solutions' },
@@ -42,7 +45,7 @@ function Home() {
                         {/* Get Early Access Section */}
                         <div className="early-access">
                             <h2>Get Early Access</h2>
-                            <button className="button-81">Register Now</button>
+                            <button className="button-81" onClick={() => navigate('/signup')}>Register Now</button>
                         </div>
                     </div>
 
