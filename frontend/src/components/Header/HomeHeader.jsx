@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom'; // Added Link for navigation and useLocation for conditionally rendering
+import { useLocation, Link } from 'react-router-dom';
 import './HomeHeader.css';
 
 function HomeHeader() {
-    const location = useLocation(); // Get the current location
+    const location = useLocation();
 
     return (
         <header className="home-header">
@@ -19,7 +19,7 @@ function HomeHeader() {
                 </nav>
             </div>
             <div className="header-right">
-                {location.pathname === '/login' || location.pathname === '/otp' ? (
+                {location.pathname === '/login' || location.pathname === '/otp' || location.pathname === '/signup' ? (
                     <Link to="/">
                         <button className="button-81">Home</button>
                     </Link>
