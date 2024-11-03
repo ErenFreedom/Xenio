@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import HomeHeader from '../../components/Header/HomeHeader';
+import DashboardHeader from '../../components/Header/DashboardHeader';
 import HomeFooter from '../../components/Footer/HomeFooter';
 import './PublicPages.css';
 
 function AccountOpening() {
     const [openDropdown, setOpenDropdown] = useState(null);
+
+    // Check if user is logged in by verifying if a token exists
+    const isLoggedIn = !!localStorage.getItem('jwtToken');
 
     // Sample data for the two queries
     const queries = [
@@ -38,7 +42,9 @@ function AccountOpening() {
 
     return (
         <div className="account-opening-page">
-            <HomeHeader />
+            {/* Conditional Header: Show DashboardHeader if logged in, else HomeHeader */}
+            {isLoggedIn ? <DashboardHeader /> : <HomeHeader />}
+            
             <div className="content">
                 <h1>Account Opening and Verification</h1>
                 <div className="queries">

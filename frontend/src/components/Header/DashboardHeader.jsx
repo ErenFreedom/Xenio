@@ -1,4 +1,3 @@
-// components/Header/DashboardHeader.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
@@ -13,8 +12,12 @@ function DashboardHeader() {
     };
 
     const handleLogout = () => {
+        // Clear the JWT token from localStorage
+        localStorage.removeItem('jwtToken');
         console.log("User logged out");
-        navigate('/login');
+
+        // Redirect to the home page
+        navigate('/');
     };
 
     const handleEditProfile = () => {

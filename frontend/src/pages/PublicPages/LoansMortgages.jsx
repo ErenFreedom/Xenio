@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import HomeHeader from '../../components/Header/HomeHeader';
+import DashboardHeader from '../../components/Header/DashboardHeader';
 import HomeFooter from '../../components/Footer/HomeFooter';
 import './PublicPages.css';
 
 function LoansMortgages() {
     const [openDropdown, setOpenDropdown] = useState(null);
 
-    // Sample data for the three queries
+    // Check if user is logged in by verifying if a token exists
+    const isLoggedIn = !!localStorage.getItem('jwtToken');
+
     const queries = [
         {
             question: 'How do I apply for a personal loan?',
@@ -43,14 +46,13 @@ function LoansMortgages() {
         }
     ];
 
-    // Toggle dropdown
     const handleToggle = (index) => {
         setOpenDropdown(openDropdown === index ? null : index);
     };
 
     return (
         <div className="account-opening-page">
-            <HomeHeader />
+            {isLoggedIn ? <DashboardHeader /> : <HomeHeader />}
             <div className="content">
                 <h1>Loans and Mortgages Information</h1>
                 <div className="queries">

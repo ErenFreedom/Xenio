@@ -3,7 +3,7 @@ const express = require('express');
 const { initiateLogin, verifyLoginOtp } = require('../controllers/loginController');
 const router = express.Router();
 
-router.post('/login/initiate', initiateLogin);  // Initiate login and send OTP
-router.post('/login/verify-otp', verifyLoginOtp);  // Verify OTP and complete login
+router.post('/initiate', initiateLogin);  // Initiate login and send OTP
+router.post('/verify-otp', verifyLoginOtp);  // Verify OTP and complete login
 
 module.exports = router;

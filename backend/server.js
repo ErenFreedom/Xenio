@@ -32,7 +32,7 @@ const queryRoutes = require('./routes/queryRoutes'); // Import the prediction ro
 // Register routes
 app.use('/api/auth', authRoutes);         // Authentication routes
 app.use('/api/login', loginRoutes);       // Login-related routes
-app.use('/api/query', queryRoutes); // Prediction route
+app.use('/api/query', queryRoutes);       // Prediction route
 
 // Start the server
 app.listen(PORT, () => {
