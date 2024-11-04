@@ -11,6 +11,9 @@ function Otp() {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [timer, setTimer] = useState(120);
 
+    // Retrieve the email from local storage (set during registration)
+    const email = localStorage.getItem('registrationEmail');
+
     useEffect(() => {
         if (timer > 0) {
             const countdown = setInterval(() => {
@@ -37,7 +40,7 @@ function Otp() {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/verify-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: 'freedomyeager12@gmail.com', otp: otpCode }),
+                body: JSON.stringify({ email, otp: otpCode }), // Dynamically use email from local storage
             });
 
             const result = await response.json();
@@ -45,9 +48,11 @@ function Otp() {
             if (response.ok) {
                 toast.success("Registration successful! You can now login.");
                 
-                // Delay navigation to give time for the toast to show
+                // Clear the email from local storage after successful registration
+                localStorage.removeItem('registrationEmail');
+                
                 setTimeout(() => {
-                    navigate('/');
+                    navigate('/login');
                 }, 2000);
             } else {
                 toast.error(result.message || 'OTP verification failed');
@@ -58,10 +63,27 @@ function Otp() {
         }
     };
 
-    const resendOtp = () => {
+    const resendOtp = async () => {
         setTimer(120); // Reset the timer to 2 minutes
-        console.log("OTP has been resent");
-        // Add resend OTP logic here
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/resend-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }), // Use email from local storage
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                toast.success("OTP has been resent. Please check your email.");
+            } else {
+                toast.error(result.message || 'Failed to resend OTP');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Error during OTP resend. Please try again.');
+        }
     };
 
     return (
@@ -70,7 +92,7 @@ function Otp() {
             <div className="otp-body">
                 <div className="otp-container">
                     <h1 className="otp-heading">A 6-digit OTP has been sent to your registered email</h1>
-                    <p className="otp-email">*****@gmail.com</p>
+                    <p className="otp-email">{email ? email.replace(/(.{2})(.*)(?=@)/, "$1****") : 'Not available'}</p> {/* Mask email for privacy */}
                     <div className="otp-inputs">
                         {otp.map((data, index) => (
                             <input

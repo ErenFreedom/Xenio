@@ -35,7 +35,10 @@ function SignUp() {
 
             if (response.ok) {
                 toast.success("Signup successful! Please complete the OTP process.");
-                
+
+                // Store email in local storage for OTP verification
+                localStorage.setItem('registrationEmail', formData.email);
+
                 // Delay navigation to give time for the toast to show
                 setTimeout(() => {
                     navigate('/otp');

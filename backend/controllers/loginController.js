@@ -1,8 +1,7 @@
-// controllers/loginController.js
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
-const sendOTP = require('../utils/sendEmail');  // Reuse sendOTP function from utils
+const sendOTP = require('../utils/sendEmail');
 
 // AES-256 encryption secret key
 const encryptionKey = process.env.ENCRYPTION_KEY || 'default_secret_key';
@@ -18,13 +17,12 @@ function decryptPassword(encryptedPassword) {
 async function initiateLogin(req, res) {
     const { emailOrUsername, password } = req.body;
 
-    // Find user by email or username
     db.get(
         `SELECT * FROM users WHERE email = ? OR username = ?`,
         [emailOrUsername, emailOrUsername],
         async (err, user) => {
             if (err) {
-                console.error('Error querying users table:', err.message);
+                console.error('Error querying users table:', err.message || err);
                 return res.status(500).json({ message: 'Database error' });
             }
 
@@ -32,15 +30,12 @@ async function initiateLogin(req, res) {
                 return res.status(400).json({ message: 'User not found' });
             }
 
-            // Decrypt stored password
             const decryptedPassword = decryptPassword(user.password);
 
-            // Compare passwords
             if (decryptedPassword !== password) {
                 return res.status(400).json({ message: 'Invalid credentials' });
             }
 
-            // Generate and send OTP
             try {
                 const otp = await sendOTP(user.email);
                 db.run(
@@ -48,7 +43,7 @@ async function initiateLogin(req, res) {
                     [user.email, otp],
                     (otpErr) => {
                         if (otpErr) {
-                            console.error('Error inserting OTP:', otpErr.message);
+                            console.error('Error inserting OTP:', otpErr.message || otpErr);
                             return res.status(500).json({ message: 'Error storing OTP' });
                         }
 
@@ -56,7 +51,7 @@ async function initiateLogin(req, res) {
                     }
                 );
             } catch (emailError) {
-                console.error('Error sending OTP email:', emailError.message);
+                console.error('Error sending OTP email:', emailError.message || emailError);
                 res.status(500).json({ message: 'Error sending OTP email' });
             }
         }
@@ -71,17 +66,21 @@ function verifyLoginOtp(req, res) {
         `SELECT * FROM users WHERE email = ?`,
         [email],
         (err, user) => {
-            if (err || !user) {
-                console.error('Error querying users table:', err.message);
+            if (err) {
+                console.error('Error querying users table:', err.message || err);
                 return res.status(500).json({ message: 'Database error' });
+            }
+
+            if (!user) {
+                return res.status(400).json({ message: 'User not found' });
             }
 
             db.get(
                 `SELECT * FROM otps WHERE email = ? AND otp = ?`,
                 [email, otp],
-                (err, otpRecord) => {
-                    if (err) {
-                        console.error('Error querying OTPs table:', err.message);
+                (otpErr, otpRecord) => {
+                    if (otpErr) {
+                        console.error('Error querying OTPs table:', otpErr.message || otpErr);
                         return res.status(500).json({ message: 'Database error' });
                     }
 
@@ -89,30 +88,26 @@ function verifyLoginOtp(req, res) {
                         return res.status(400).json({ message: 'Invalid OTP' });
                     }
 
-                    // Retrieve OTP creation time and compare with current time for expiration
                     const otpCreatedAtUTC = new Date(otpRecord.created_at + " UTC");
                     const currentTimeUTC = new Date(new Date().toISOString());
-
                     const timeDiff = (currentTimeUTC - otpCreatedAtUTC) / 1000;
 
-                    if (timeDiff > 120) { // 120 seconds (2-minute validity)
+                    if (timeDiff > 120) {
                         return res.status(400).json({ message: 'OTP expired' });
                     }
 
-                    // Generate JWT token with username, email, and encrypted password
                     const tokenPayload = {
                         userId: user.id,
                         username: user.username,
                         email: user.email,
-                        password: user.password // Or consider encrypting this if absolutely necessary
+                        password: user.password
                     };
 
                     const token = jwt.sign(tokenPayload, jwtSecretKey, { expiresIn: '2h' });
 
-                    // Clear OTP after successful login
                     db.run(`DELETE FROM otps WHERE email = ?`, [email], (deleteErr) => {
                         if (deleteErr) {
-                            console.error('Error deleting OTP:', deleteErr.message);
+                            console.error('Error deleting OTP:', deleteErr.message || deleteErr);
                             return res.status(500).json({ message: 'Error clearing OTP' });
                         }
                         res.status(200).json({ message: 'Login successful', token });

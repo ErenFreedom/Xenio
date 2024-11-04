@@ -17,7 +17,6 @@ async function registerUser(req, res) {
     // Encrypt the password
     const encryptedPassword = encryptPassword(password);
 
-    // Check if the user with the same email or username already exists in the main users table
     db.get(
         `SELECT * FROM users WHERE email = ? OR username = ?`,
         [email, username],
@@ -32,10 +31,7 @@ async function registerUser(req, res) {
             }
 
             try {
-                // Send OTP email and retrieve generated OTP
                 const otp = await sendOTP(email);
-
-                // Insert user data into temp_users table
                 db.run(
                     `INSERT INTO temp_users (first_name, last_name, username, date_of_birth, email, password) VALUES (?, ?, ?, ?, ?, ?)`,
                     [firstName, lastName, username, dob, email, encryptedPassword],
@@ -45,9 +41,9 @@ async function registerUser(req, res) {
                             return res.status(500).json({ message: 'Error saving temporary user' });
                         }
 
-                        // Store OTP in the OTP table for verification
+                        // Store OTP in the OTP table for verification with timestamp in IST
                         db.run(
-                            `INSERT INTO otps (email, otp, created_at) VALUES (?, ?, datetime('now'))`,
+                            `INSERT INTO otps (email, otp, created_at) VALUES (?, ?, datetime('now', '+5 hours', '30 minutes'))`,
                             [email, otp],
                             (otpErr) => {
                                 if (otpErr) {
@@ -69,7 +65,6 @@ async function registerUser(req, res) {
 }
 
 // Verify OTP and complete registration
-// Verify OTP and complete registration
 function verifyOtp(req, res) {
     const { email, otp } = req.body;
 
@@ -86,22 +81,15 @@ function verifyOtp(req, res) {
                 return res.status(400).json({ message: 'Invalid OTP' });
             }
 
-            // Retrieve OTP creation time in UTC
-            const otpCreatedAtUTC = new Date(otpRecord.created_at + " UTC");
-            const currentTimeUTC = new Date(new Date().toISOString()); // Current UTC time
+            const otpCreatedAtIST = new Date(otpRecord.created_at + " UTC+0530");
+            const currentTimeIST = new Date();
 
-            // Calculate time difference in seconds
-            const timeDiff = (currentTimeUTC - otpCreatedAtUTC) / 1000;
+            const timeDiff = (currentTimeIST - otpCreatedAtIST) / 1000;
 
-            console.log(`OTP created at (UTC): ${otpCreatedAtUTC}`);
-            console.log(`Current time (UTC): ${currentTimeUTC}`);
-            console.log(`Time difference in seconds: ${timeDiff}`);
-
-            if (timeDiff > 120) { // 120 seconds for a 2-minute validity
+            if (timeDiff > 120) { // 120 seconds for 2-minute validity
                 return res.status(400).json({ message: 'OTP expired' });
             }
 
-            // Retrieve user data from temp_users table
             db.get(
                 `SELECT * FROM temp_users WHERE email = ?`,
                 [email],
@@ -111,7 +99,6 @@ function verifyOtp(req, res) {
                         return res.status(500).json({ message: 'Error completing registration' });
                     }
 
-                    // Insert verified user into the main users table
                     db.run(
                         `INSERT INTO users (first_name, last_name, username, date_of_birth, email, password, is_verified) VALUES (?, ?, ?, ?, ?, ?, 1)`,
                         [tempUser.first_name, tempUser.last_name, tempUser.username, tempUser.date_of_birth, tempUser.email, tempUser.password],
@@ -121,7 +108,6 @@ function verifyOtp(req, res) {
                                 return res.status(500).json({ message: 'Error finalizing registration' });
                             }
 
-                            // Delete OTP and temporary user data after successful registration
                             db.run(`DELETE FROM otps WHERE email = ?`, [email]);
                             db.run(`DELETE FROM temp_users WHERE email = ?`, [email], (deleteErr) => {
                                 if (deleteErr) {
@@ -147,31 +133,26 @@ async function resendOtp(req, res) {
             return res.status(404).json({ message: 'User not found or not registered.' });
         }
 
-        const currentTime = new Date();
-        const lastResendTime = new Date(tempUser.last_resend_time);
-        const timeDiff = (currentTime - lastResendTime) / 1000; // Time difference in seconds
+        const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp
+        const lastResendTime = tempUser.last_resend_time;
+        const timeDiff = currentTime - lastResendTime;
 
         if (tempUser.resend_count >= 3) {
             if (timeDiff < 3600) {
-                // 1-hour cooldown after 3 attempts
                 const remainingTime = Math.ceil((3600 - timeDiff) / 60);
                 return res.status(429).json({ message: `Resend limit reached. Please wait ${remainingTime} minutes.` });
             } else {
-                // Reset count after cooldown period
                 db.run(`UPDATE temp_users SET resend_count = 0 WHERE email = ?`, [email]);
             }
         }
 
         try {
-            const newOtp = await sendOTP(email); // Generate and send new OTP
-
-            // Update resend_count and last_resend_time in temp_users table
+            const newOtp = await sendOTP(email);
             db.run(
                 `UPDATE temp_users SET resend_count = resend_count + 1, last_resend_time = datetime('now', '+5 hours', '30 minutes') WHERE email = ?`,
                 [email]
             );
 
-            // Update or insert OTP in the otps table
             db.run(
                 `UPDATE otps SET otp = ?, created_at = datetime('now', '+5 hours', '30 minutes') WHERE email = ?`,
                 [newOtp, email],
@@ -192,6 +173,3 @@ async function resendOtp(req, res) {
 }
 
 module.exports = { registerUser, verifyOtp, resendOtp };
-
-
-

@@ -92,7 +92,7 @@ function Home() {
                 const pageRoute = privatePageRoutes[predicted_category];
                 if (pageRoute) {
                     toast.info("Login is required to access this page.");
-                    setTimeout(() => navigate('/login'), 1000); // Redirect to login after showing toast
+                    setTimeout(() => navigate('/login'), 3000); // Redirect to login after showing toast
                 } else {
                     toast.error("Private page not found for this query.");
                 }
@@ -106,8 +106,8 @@ function Home() {
             }
         } catch (error) {
             console.error("Error handling search:", error);
-            toast.error("Failed to fetch the query result. Login is required.");
-            setTimeout(() => navigate('/login'), 1000); // Redirect to login on error
+            toast.error("Please Login First");
+            setTimeout(() => navigate('/login'), 3000); // Redirect to login on error
         }
     };
 

@@ -28,11 +28,13 @@ app.get('/', (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 const loginRoutes = require('./routes/loginRoutes');
 const queryRoutes = require('./routes/queryRoutes'); // Import the prediction route
+const userRoutes = require('./routes/userRoutes'); 
 
 // Register routes
 app.use('/api/auth', authRoutes);         // Authentication routes
 app.use('/api/login', loginRoutes);       // Login-related routes
 app.use('/api/query', queryRoutes);       // Prediction route
+app.use('/api/user', userRoutes);
 
 // Start the server
 app.listen(PORT, () => {

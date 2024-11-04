@@ -20,10 +20,6 @@ function DashboardHeader() {
         navigate('/');
     };
 
-    const handleEditProfile = () => {
-        navigate('/edit-profile');
-    };
-
     return (
         <header className="dashboard-header">
             <div className="dashboard-header-left">
@@ -41,7 +37,6 @@ function DashboardHeader() {
                 <FaUserCircle className="dashboard-profile-icon" />
                 {dropdownVisible && (
                     <div className="dashboard-dropdown">
-                        <button className="dashboard-dropdown-item" onClick={handleEditProfile}>Edit Profile</button>
                         <button className="dashboard-dropdown-item" onClick={handleLogout}>Logout</button>
                     </div>
                 )}
