@@ -131,7 +131,9 @@ function Home() {
                     <div className="left-text">
                         <h1>Your Money,</h1>
                         <h1>to The Power of <span className="highlight">Xenio</span>.</h1>
-                        <p>Discover the reloadable mobile wallet that gives you the best of a debit card...</p>
+                        <p>Discover the reloadable mobile wallet that gives you the best of a debit card,</p>
+                        <p>offering discounts on travel, multi currency features, loyality rewards, and more.</p>
+                        <p>No credit, no interest, no annual fee.</p>
                         <div className="early-access">
                             <h2>Get Early Access</h2>
                             <button className="button-81" onClick={() => navigate('/signup')}>Register Now</button>

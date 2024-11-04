@@ -9,14 +9,16 @@ function HomeHeader() {
     return (
         <header className="home-header">
             <div className="header-left">
-                <img src="/logo.png" alt="Xenio Logo" className="logo" />
+                <Link to="/">
+                    <img src="/logo.png" alt="Xenio Logo" className="logo" />
+                </Link>
             </div>
             <div className="header-center">
                 <nav className="header-nav">
-                    <a href="#about">About Xenio</a>
-                    <a href="#contact">Contact Us</a>
-                    <a href="#how">How Xenio Works</a>
-                    <a href="#benefits">Exclusive Benefits</a>
+                    <Link to="/about" className="header-nav-link">About Xenio</Link>
+                    <Link to="/contact" className="header-nav-link">Contact Us</Link>
+                    <Link to="/how" className="header-nav-link">How Xenio Works</Link>
+                    <Link to="/benefits" className="header-nav-link">Exclusive Benefits</Link>
                 </nav>
             </div>
             <div className="header-right">
