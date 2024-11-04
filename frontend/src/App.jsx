@@ -10,6 +10,7 @@ import PublicPageLoader from './pages/PublicPages/PublicPageLoader'; // Dynamic 
 import PrivatePageLoader from './pages/PrivatePages/PrivatePageLoader'; // Dynamic loader for private pages
 import Dashboard from './pages/Dashboard/Dashboard'; // Import the Dashboard component
 
+
 function App() {
     return (
         <Router>

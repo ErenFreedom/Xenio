@@ -26,12 +26,7 @@ function DashboardHeader() {
                 <img src="/logo.png" alt="Xenio Logo" className="dashboard-logo" />
             </div>
             <div className="dashboard-header-center">
-                <nav className="dashboard-nav">
-                    <a href="#overview" className="dashboard-nav-link">Overview</a>
-                    <a href="#transactions" className="dashboard-nav-link">Transactions</a>
-                    <a href="#insights" className="dashboard-nav-link">Insights</a>
-                    <a href="#support" className="dashboard-nav-link">Support</a>
-                </nav>
+                <h2 className="dashboard-welcome-message">Welcome to your Dashboard</h2>
             </div>
             <div className="dashboard-header-right" onClick={toggleDropdown}>
                 <FaUserCircle className="dashboard-profile-icon" />
