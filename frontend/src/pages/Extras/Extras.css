@@ -1,6 +1,4 @@
-/* Extras.css */
 
-/* General Styling for the Extras Pages */
 .extras-page {
     display: flex;
     flex-direction: column;
@@ -9,7 +7,6 @@
     color: white;
 }
 
-/* Ensures that the content stays centered and does not stretch */
 .extras-content {
     flex: 1;
     display: flex;
@@ -20,13 +17,11 @@
     text-align: center;
 }
 
-/* Styling for Titles */
 .extras-title {
     font-size: 2rem;
     margin-bottom: 20px;
 }
 
-/* Styling for Points/Paragraphs */
 .extras-point {
     font-size: 1.2rem;
     line-height: 1.8;

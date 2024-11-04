@@ -1,4 +1,3 @@
-// src/pages/Extras/ContactUs.jsx
 import React from 'react';
 import HomeHeader from '../../components/Header/HomeHeader';
 import HomeFooter from '../../components/Footer/HomeFooter';
